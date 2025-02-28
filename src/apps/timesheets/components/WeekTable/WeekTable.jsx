@@ -1,5 +1,4 @@
 import Table from "../Table/Table";
-import styles from "./WeekTable.module.scss";
 
 function WeekTable({ weeks, onUpdate, onClick }) {
   return (

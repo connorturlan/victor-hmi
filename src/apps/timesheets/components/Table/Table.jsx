@@ -52,7 +52,7 @@ function Table({ headings, tableData, onUpdate, onClick }) {
           {tableData &&
             tableData.map((row, rowIndex) => {
               return (
-                <tr key={`row${rowIndex}`} onClick={onClick}>
+                <tr key={`row${rowIndex}`}>
                   {row.slice(0, 1).map((cell, cellIndex) => {
                     return (
                       <td key={`cell${rowIndex},${cellIndex}`}>
@@ -86,10 +86,21 @@ function Table({ headings, tableData, onUpdate, onClick }) {
                     );
                   })}
                   <td>
-                    <button onClick={() => removeRow(rowIndex)}>
+                    <button
+                      onClick={() =>
+                        window.confirm(
+                          "Are you sure you want to delete this row?"
+                        ) && removeRow(rowIndex)
+                      }
+                    >
                       Remove Row
                     </button>
                   </td>
+                  {onClick && (
+                    <td>
+                      <button onClick={() => onClick(rowIndex)}>Select</button>
+                    </td>
+                  )}
                 </tr>
               );
             })}

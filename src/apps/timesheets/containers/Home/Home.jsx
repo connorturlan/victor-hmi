@@ -9,8 +9,9 @@ function Home() {
   const [weeks, setWeeks] = useState([]);
   const [working, setWorking] = useState("");
 
-  const handleWeekSelect = (week) => {
-    setWorking(week);
+  const handleWeekSelect = (weekIndex) => {
+    console.log(`selected: ${weekIndex}`);
+    setWorking(weeks.at(weekIndex));
   };
 
   const handleSave = (week) => {
@@ -24,10 +25,7 @@ function Home() {
       onUpdate={setWeeks}
     ></WeekTable>
   ) : (
-    <TimesheetEditor
-      tableTitle={"sum fkn name here"}
-      onSave={handleSave}
-    ></TimesheetEditor>
+    <TimesheetEditor tableTitle={working} onSave={handleSave}></TimesheetEditor>
   );
 
   return (
