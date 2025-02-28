@@ -6,7 +6,7 @@ name=$3
 shift
 shift
 
-basePath="./apps"
+basePath="./src/apps"
 
 # set the path to either containers components depending on the param.
 if [ $type = "component" ] 

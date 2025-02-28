@@ -1,1 +1,35 @@
-.Table {}
+.Table {
+  width: 100%;
+  height: 100%;
+
+  &_Table {
+    width: 100%;
+
+    table-layout: auto;
+    border-collapse: collapse;
+    border: none;
+
+    display: table;
+
+    & tr {
+      width: 100%;
+      border-bottom: 1px solid #444;
+
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      align-items: center;
+      text-align: center;
+    }
+
+    & input {
+      display: flex;
+      text-align: end;
+
+      margin: auto;
+    }
+  }
+
+  &_Add_Row {
+    width: 100%;
+  }
+}

@@ -1,35 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Table from "../../components/Table/Table";
 import styles from "./Home.module.scss";
+import TimesheetTable from "../../components/TimesheetTable/TimesheetTable";
+import TimesheetEditor from "../TimesheetEditor/TimesheetEditor";
+import WeekTable from "../../components/WeekTable/WeekTable";
 
-function Home(props) {
-  const [tableData, setTableData] = useState(null);
+function Home() {
+  const [weeks, setWeeks] = useState([]);
+  const [working, setWorking] = useState("");
 
-  const onTableUpdate = (data) => {
-    console.log(data);
-    setTableData(data);
+  const handleWeekSelect = (week) => {
+    setWorking(week);
   };
 
-  const onTableSave = () => {
-    console.log(tableData);
-    window.alert("Timesheet Saved");
+  const handleSave = (week) => {
+    setWorking("");
   };
+
+  const child = !working ? (
+    <WeekTable
+      weeks={weeks}
+      onClick={handleWeekSelect}
+      onUpdate={setWeeks}
+    ></WeekTable>
+  ) : (
+    <TimesheetEditor
+      tableTitle={"sum fkn name here"}
+      onSave={handleSave}
+    ></TimesheetEditor>
+  );
 
   return (
     <div className={styles.Home}>
-      <Table
-        headings={["Timecode", "Monday", "Thursday", "Saturday"]}
-        data={[
-          [0, 0, 1, 1],
-          [1, 0, 1, 2],
-          [2, 0, 1, 2],
-          [3, 0, 1, 2],
-        ]}
-        onUpdate={onTableUpdate}
-      ></Table>
-      <div className={styles.Home_Footer}>
-        <button onClick={onTableSave}>Save</button>
+      <div className={styles.Home_Header}>
+        <h1>Timesheets</h1>
       </div>
+      {child}
+      <div className={styles.Home_Footer}></div>
     </div>
   );
 }

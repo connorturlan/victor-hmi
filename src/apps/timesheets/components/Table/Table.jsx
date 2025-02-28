@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import styles from "./Table.module.scss";
 
-function Table({ headings, data, onUpdate }) {
-  const [tableData, setRows] = useState(data);
+function Table({ headings, tableData, onUpdate, onClick }) {
+  // const [tableData, setRows] = useState(data || []);
 
   const updateRow = (rowIndex, cellIndex, value) => {
     const newTable = tableData.slice();
     newTable[rowIndex][cellIndex] = value;
-    setRows(newTable);
+    onUpdate && onUpdate(newTable);
   };
 
   const addRow = () => {
     const newTable = tableData.slice();
-    newTable.push(Array.apply(0, Array(headings.length)));
-    setRows(newTable);
+    const newArray = Array.apply(0, Array(headings.length)).map(() => {
+      return -1;
+    });
+    newArray[0] = "";
+    newTable.push(newArray);
+    onUpdate && onUpdate(newTable);
   };
 
   const removeRow = (rowIndex) => {
@@ -22,17 +26,21 @@ function Table({ headings, data, onUpdate }) {
     const postTable = tableData.slice(rowIndex + 1);
     const newTable = preTable.concat(postTable);
     console.log(preTable, postTable, newTable);
-    setRows(newTable);
+    onUpdate && onUpdate(newTable);
   };
 
-  useEffect(() => {
-    console.log("updating table");
-    onUpdate && onUpdate(tableData);
-  }, [tableData]);
+  // useEffect(() => {
+  //   console.log("updating table");
+  //   onUpdate && onUpdate(tableData);
+  // }, [tableData]);
+
+  // useEffect(() => {
+  //   console.log("table was updated");
+  // }, [data]);
 
   return (
     <div className={styles.Table}>
-      <table>
+      <table className={styles.Table_Table}>
         <thead>
           <tr>
             {headings.map((heading) => {
@@ -41,30 +49,50 @@ function Table({ headings, data, onUpdate }) {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((row, rowIndex) => {
-            return (
-              <tr key={`row${rowIndex}`}>
-                {row.map((cell, cellIndex) => {
-                  return (
-                    <td key={`cell${rowIndex},${cellIndex}`}>
-                      <input
-                        placeholder="0"
-                        value={cell}
-                        onChange={(event) =>
-                          updateRow(rowIndex, cellIndex, event.target.value)
-                        }
-                      ></input>
-                    </td>
-                  );
-                })}
-                <td>
-                  <button onClick={() => removeRow(rowIndex)}>
-                    Remove Row
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+          {tableData &&
+            tableData.map((row, rowIndex) => {
+              return (
+                <tr key={`row${rowIndex}`} onClick={onClick}>
+                  {row.slice(0, 1).map((cell, cellIndex) => {
+                    return (
+                      <td key={`cell${rowIndex},${cellIndex}`}>
+                        <input
+                          placeholder="TIMECODE"
+                          value={cell}
+                          onChange={(event) =>
+                            updateRow(rowIndex, cellIndex, event.target.value)
+                          }
+                        ></input>
+                      </td>
+                    );
+                  })}
+                  {row.slice(1).map((cell, cellIndex) => {
+                    return cell < 0 ? (
+                      <td></td>
+                    ) : (
+                      <td key={`cell${rowIndex},${cellIndex}`}>
+                        <input
+                          placeholder="0"
+                          value={cell}
+                          onChange={(event) =>
+                            updateRow(
+                              rowIndex,
+                              cellIndex + 1,
+                              event.target.value
+                            )
+                          }
+                        ></input>
+                      </td>
+                    );
+                  })}
+                  <td>
+                    <button onClick={() => removeRow(rowIndex)}>
+                      Remove Row
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           <tr>
             <td>
               <button onClick={addRow}>Add Row</button>
