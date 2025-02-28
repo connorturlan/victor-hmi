@@ -1,0 +1,31 @@
+.Login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: 100%;
+
+  background-color: #eee;
+  color: #333;
+
+  padding: 12px 12px;
+  border-radius: 12px;
+
+  &_Form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    gap: 8px;
+
+    & > h2 {
+      margin: 0;
+    }
+
+    & > * {
+      padding: 4px;
+      border-radius: 8px;
+    }
+  }
+}
