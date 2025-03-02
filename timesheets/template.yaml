@@ -1,0 +1,266 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  timesheets-service
+
+  Sample SAM Template for timesheets-service
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 600
+    MemorySize: 128
+  Api:
+    Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Authorization, *'"
+        AllowOrigin: "'*'"
+
+Resources:
+  TimesheetsService:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata:
+      BuildMethod: go1.x
+    Properties:
+      CodeUri: src/main/
+      Handler: bootstrap
+      Runtime: provided.al2
+      Architectures:
+        - x86_64
+      Events:
+        CORS:
+          Type: Api
+          Properties:
+            Path: /
+            Method: OPTIONS
+        RootGet:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /
+            Method: GET
+      Environment: # More info about Env Vars: https://github.com/awslabsW/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          local: false
+          api_key: ""
+          cors_origin_url: ""
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: timesheets_service
+      Timeout: 10
+      Policies:
+        - Statement:
+            - Action:
+                - dynamodb:GetItem
+                - dynamodb:DeleteItem
+                - dynamodb:PutItem
+                - dynamodb:Scan
+                - dynamodb:Query
+                - dynamodb:UpdateItem
+                - dynamodb:BatchWriteItem
+                - dynamodb:BatchGetItem
+                - dynamodb:DescribeTable
+                - dynamodb:ConditionCheckItem
+                - dynamodb:CreateTable
+              Resource:
+                - >-
+                  arn:aws:dynamodb:ap-southeast-2:300935468022:table/current_fuel_prices
+                - >-
+                  arn:aws:dynamodb:ap-southeast-2:300935468022:table/current_fuel_prices/index/*
+              Effect: Allow
+            - Action:
+                - dynamodb:GetItem
+                - dynamodb:DeleteItem
+                - dynamodb:PutItem
+                - dynamodb:Scan
+                - dynamodb:Query
+                - dynamodb:UpdateItem
+                - dynamodb:BatchWriteItem
+                - dynamodb:BatchGetItem
+                - dynamodb:DescribeTable
+                - dynamodb:ConditionCheckItem
+              Resource:
+                - >-
+                  arn:aws:dynamodb:ap-southeast-2:300935468022:table/safpis_fuel_sites
+                - >-
+                  arn:aws:dynamodb:ap-southeast-2:300935468022:table/safpis_fuel_sites/index/*
+              Effect: Allow
+            - Effect: Allow
+              Action:
+                - dynamodb:DescribeStream
+                - dynamodb:GetRecords
+                - dynamodb:GetShardIterator
+                - dynamodb:ListStreams
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - dynamodb:DescribeStream
+                - dynamodb:GetRecords
+                - dynamodb:GetShardIterator
+                - dynamodb:ListStreams
+              Resource: '*'
+            - Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: '*'
+            - Sid: GeneralReadOnlyAccess
+              Action:
+                - application-autoscaling:DescribeScalableTargets
+                - application-autoscaling:DescribeScalingActivities
+                - application-autoscaling:DescribeScalingPolicies
+                - cloudwatch:DescribeAlarmHistory
+                - cloudwatch:DescribeAlarms
+                - cloudwatch:DescribeAlarmsForMetric
+                - cloudwatch:GetMetricStatistics
+                - cloudwatch:ListMetrics
+                - cloudwatch:GetMetricData
+                - datapipeline:DescribeObjects
+                - datapipeline:DescribePipelines
+                - datapipeline:GetPipelineDefinition
+                - datapipeline:ListPipelines
+                - datapipeline:QueryObjects
+                - dynamodb:BatchGetItem
+                - dynamodb:Describe*
+                - dynamodb:List*
+                - dynamodb:GetItem
+                - dynamodb:GetResourcePolicy
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:PartiQLSelect
+                - dax:Describe*
+                - dax:List*
+                - dax:GetItem
+                - dax:BatchGetItem
+                - dax:Query
+                - dax:Scan
+                - ec2:DescribeVpcs
+                - ec2:DescribeSubnets
+                - ec2:DescribeSecurityGroups
+                - iam:GetRole
+                - iam:ListRoles
+                - kms:DescribeKey
+                - kms:ListAliases
+                - sns:ListSubscriptionsByTopic
+                - sns:ListTopics
+                - lambda:ListFunctions
+                - lambda:ListEventSourceMappings
+                - lambda:GetFunctionConfiguration
+                - resource-groups:ListGroups
+                - resource-groups:ListGroupResources
+                - resource-groups:GetGroup
+                - resource-groups:GetGroupQuery
+                - tag:GetResources
+                - kinesis:ListStreams
+                - kinesis:DescribeStream
+                - kinesis:DescribeStreamSummary
+              Effect: Allow
+              Resource: '*'
+            - Sid: CCIAccess
+              Action:
+                - cloudwatch:GetInsightRuleReport
+              Effect: Allow
+              Resource: arn:aws:cloudwatch:*:*:insight-rule/DynamoDBContributorInsights*
+            - Action:
+                - dynamodb:*
+                - dax:*
+                - application-autoscaling:DeleteScalingPolicy
+                - application-autoscaling:DeregisterScalableTarget
+                - application-autoscaling:DescribeScalableTargets
+                - application-autoscaling:DescribeScalingActivities
+                - application-autoscaling:DescribeScalingPolicies
+                - application-autoscaling:PutScalingPolicy
+                - application-autoscaling:RegisterScalableTarget
+                - cloudwatch:DeleteAlarms
+                - cloudwatch:DescribeAlarmHistory
+                - cloudwatch:DescribeAlarms
+                - cloudwatch:DescribeAlarmsForMetric
+                - cloudwatch:GetMetricStatistics
+                - cloudwatch:ListMetrics
+                - cloudwatch:PutMetricAlarm
+                - cloudwatch:GetMetricData
+                - datapipeline:ActivatePipeline
+                - datapipeline:CreatePipeline
+                - datapipeline:DeletePipeline
+                - datapipeline:DescribeObjects
+                - datapipeline:DescribePipelines
+                - datapipeline:GetPipelineDefinition
+                - datapipeline:ListPipelines
+                - datapipeline:PutPipelineDefinition
+                - datapipeline:QueryObjects
+                - ec2:DescribeVpcs
+                - ec2:DescribeSubnets
+                - ec2:DescribeSecurityGroups
+                - iam:GetRole
+                - iam:ListRoles
+                - kms:DescribeKey
+                - kms:ListAliases
+                - sns:CreateTopic
+                - sns:DeleteTopic
+                - sns:ListSubscriptions
+                - sns:ListSubscriptionsByTopic
+                - sns:ListTopics
+                - sns:Subscribe
+                - sns:Unsubscribe
+                - sns:SetTopicAttributes
+                - lambda:CreateFunction
+                - lambda:ListFunctions
+                - lambda:ListEventSourceMappings
+                - lambda:CreateEventSourceMapping
+                - lambda:DeleteEventSourceMapping
+                - lambda:GetFunctionConfiguration
+                - lambda:DeleteFunction
+                - resource-groups:ListGroups
+                - resource-groups:ListGroupResources
+                - resource-groups:GetGroup
+                - resource-groups:GetGroupQuery
+                - resource-groups:DeleteGroup
+                - resource-groups:CreateGroup
+                - tag:GetResources
+                - kinesis:ListStreams
+                - kinesis:DescribeStream
+                - kinesis:DescribeStreamSummary
+              Effect: Allow
+              Resource: '*'
+            - Action:
+                - cloudwatch:GetInsightRuleReport
+              Effect: Allow
+              Resource: arn:aws:cloudwatch:*:*:insight-rule/DynamoDBContributorInsights*
+            - Action:
+                - iam:PassRole
+              Effect: Allow
+              Resource: '*'
+              Condition:
+                StringLike:
+                  iam:PassedToService:
+                    - application-autoscaling.amazonaws.com
+                    - application-autoscaling.amazonaws.com.cn
+                    - dax.amazonaws.com
+            - Effect: Allow
+              Action:
+                - iam:CreateServiceLinkedRole
+              Resource: '*'
+              Condition:
+                StringEquals:
+                  iam:AWSServiceName:
+                    - replication.dynamodb.amazonaws.com
+                    - dax.amazonaws.com
+                    - dynamodb.application-autoscaling.amazonaws.com
+                    - contributorinsights.dynamodb.amazonaws.com
+                    - kinesisreplication.dynamodb.amazonaws.com
+      
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  TimesheetsServiceAPI:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/{proxy+}/"
