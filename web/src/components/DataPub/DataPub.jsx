@@ -8,15 +8,20 @@ function DataPub({ controller }) {
   const publish = usePub();
 
   const updateTime = () => {
-    publish("onUpdateTime", time);
-    setTime(time + 1);
+    setTime((prevTime) => prevTime + 1);
   };
 
   useEffect(() => {
-    setInterval(updateTime, 1_000);
+    console.log("useEffect runs");
+    const interval = setInterval(updateTime, 1_000);
+    return () => clearInterval(interval);
   }, []);
 
-  return <button onClick={updateTime}>publish time {time}</button>;
+  useEffect(() => {
+    publish("onUpdateTime", time);
+  }, [time]);
+
+  return <div>publish time {time}</div>;
 }
 
 export default DataPub;
