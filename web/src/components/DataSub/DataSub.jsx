@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataSubscriber, UseSub } from "../../core/datasources";
+import { UseSub } from "../../core/datasources";
 import styles from "./DataSub.module.scss";
 
 const sub = new DataSubscriber();

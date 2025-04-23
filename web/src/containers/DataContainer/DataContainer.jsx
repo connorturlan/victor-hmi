@@ -1,17 +1,10 @@
-import { useState } from "react";
-import {
-  DataController,
-  DataPublisher,
-  DataSubscriber,
-} from "../../core/datasources";
+import { lazy, useState } from "react";
 import styles from "./DataContainer.module.scss";
 import DataSub from "../../components/DataSub/DataSub";
 import DataPub from "../../components/DataPub/DataPub";
 
 function DataContainer(props) {
-  const controller = new DataController();
-
-  return (
+  return lazy(
     <div>
       <DataPub controller={controller} />
       <DataSub controller={controller} />

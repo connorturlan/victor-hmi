@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { federation } from "@module-federation/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -7,17 +8,10 @@ export default defineConfig({
     react(),
     federation({
       name: "alpha-uhmi",
-      manifest: true,
       remotes: {
-        esm_remote: {
-          type: "module",
-          name: "esm_remote",
-          entry: "https://[...]/remoteEntry.js",
-        },
-        var_remote: "var_remote@https://[...]/remoteEntry.js",
-      },
-      exposes: {
-        "./button": "./src/components/button",
+        // module federation is being handled dynamically. see app.tsx
+        // add dummy.js to prevent vite from throwing an error
+        dummy: "dummy.js",
       },
       shared: {
         react: {
@@ -29,4 +23,7 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    target: "esnext",
+  },
 });
