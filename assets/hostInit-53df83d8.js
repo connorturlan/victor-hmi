@@ -1,0 +1,1 @@
+import{_ as i}from"./preload-helper-a4192956.js";const r=i(()=>import("./remoteEntry-ec75b4e1.js"),["./remoteEntry-ec75b4e1.js","./alpha_mf_2_uhmi__mf_v__runtimeInit__mf_v__-f1c58047.js","./preload-helper-a4192956.js","./virtualExposes-b25bb000.js"],import.meta.url);Promise.resolve(r).then(e=>Promise.resolve(e.__tla).then(e.init).catch(e.init));

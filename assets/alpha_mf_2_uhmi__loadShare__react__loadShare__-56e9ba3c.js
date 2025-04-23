@@ -1,0 +1,1 @@
+import{g as e}from"./_commonjsHelpers-39b5b250.js";import{i as t,a as _}from"./alpha_mf_2_uhmi__mf_v__runtimeInit__mf_v__-f1c58047.js";const{loadShare:r}=t,{initPromise:o}=_,s=o.then(a=>r("react",{customShareInfo:{shareConfig:{singleton:!0,strictVersion:!1,requiredVersion:"^18.3.1"}}})),i=await s.then(a=>a());var n=i;const h=e(n);export{h as R,n as a};
