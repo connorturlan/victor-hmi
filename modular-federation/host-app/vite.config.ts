@@ -10,7 +10,10 @@ export default defineConfig({
       name: "host-app",
       filename: "remoteEntry.js",
       remotes: {
-        remote_app_1: "http://localhost:4173/assets/remoteEntry.js",
+        // remote_app_1: "http://localhost:4173/assets/remoteEntry.js",
+        // module federation is being handled dynamically. see app.tsx
+        // add dummy.js to prevent vite from throwing an error
+        dummy: "dummy.js",
       },
       shared: {
         react: {
