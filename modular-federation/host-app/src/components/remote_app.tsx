@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { ElementType, lazy, Suspense } from "react";
 import {
   __federation_method_getRemote,
   __federation_method_setRemote,
@@ -21,10 +21,14 @@ const RemoteAsset = lazy(() => {
   return __federation_method_getRemote(name, module);
 });
 
-export const Asset: React.FC = () => {
+export const Asset: ElementType = () => {
   return (
     <Suspense fallback="loading">
-      <RemoteAsset></RemoteAsset>
+      <RemoteAsset
+        url="http://localhost:4173/assets/remoteEntry.js"
+        name="remote_app_1"
+        module="./Asset"
+      />
     </Suspense>
   );
 };

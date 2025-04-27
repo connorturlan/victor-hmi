@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { Asset } from "./components/remote_app";
+import { DynamicAsset } from "./components/dynamic_remote_app";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,6 +29,8 @@ function App() {
       </div>
       <h2>This is the host app</h2>
       <Asset />
+      <h2>This is the host app, with the dynamic</h2>
+      <DynamicAsset />
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
